@@ -4,11 +4,48 @@ import ControlButton from './components/ControlButton.js';
 import TemperatureFooter from './components/TemperatureFooter.js';
 
 class App extends Component {
+  constructor(props) {
+      super(props);
+
+      this.state = {
+          modes: [],
+          activeMode: "OFF"
+      }
+  }
+
+  componentWillMount() {
+      fetch("/getModes").then(response => {
+          return response.json();
+      }).then(data => {
+          this.setState({modes: data});
+      });
+  }
+
+  setLightMode(mode) {
+      console.log("Setting mode: " + mode);
+      fetch("/setMode/" + mode).then(response => {
+          console.log(response);
+          return response.json();
+      }).then(data => {
+          console.log(data);
+          if (data === "OK") {
+              this.setState({activeMode: mode})
+          }
+      })
+  }
+
+  renderControls() {
+      var buttons = [];
+      Object.keys(this.state.modes).forEach((key) => {
+          buttons.push(<ControlButton mode={key} onClick={() => this.setLightMode(key)} displayName={this.state.modes[key]} active={(key === this.state.activeMode) ? true : false} />)
+      })
+      return buttons;
+  }
+
   render() {
     return (
       <div id="wrapper">
-        <ControlButton /> <ControlButton />
-        <ControlButton /> <ControlButton />
+        {this.renderControls()}
 
         <TemperatureFooter />
       </div>

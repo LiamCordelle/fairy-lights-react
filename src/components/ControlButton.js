@@ -3,12 +3,18 @@ import './ComponentCss/ControlButton.css';
 
 class ControlButton extends Component {
   render() {
+    var outerBoxClassName = "SquareBox";
+
+    if (this.props.active) {
+        outerBoxClassName += " Active";
+    }
+
     return (
-      <div className='SquareBox'>
+      <div className={outerBoxClassName}>
         <div className='ControlButtonContainer'>
           <div className='centering-table'>
-            <a class="centering-table-cell control_button">
-              <div class="control_button_content">PLACEHOLDER CONTENT</div>
+            <a className="centering-table-cell control_button" onClick={this.props.onClick} href={"#" + this.props.mode}>
+              <div className="control_button_content">{this.props.displayName}</div>
             </a>
           </div>
         </div>

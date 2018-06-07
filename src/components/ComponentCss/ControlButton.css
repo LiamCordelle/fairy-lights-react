@@ -27,3 +27,7 @@
 .control_button_content {
   color: white;
 }
+
+.Active {
+    background-color: #699bc4 !important;
+}
