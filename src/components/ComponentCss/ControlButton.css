@@ -1,0 +1,29 @@
+.ControlButtonContainer {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+
+.SquareBox {
+	width: 45%;
+	background-color: steelblue;
+	float: left;
+	margin: 2.5%;
+	padding-bottom: 45%;
+	position: relative;
+}
+
+.control_button {
+	color: white;
+	font-size: 32px;
+	text-decoration: none;
+}
+
+.control_button:hover {
+	color: white;
+	text-decoration: none;
+}
+
+.control_button_content {
+  color: white;
+}
