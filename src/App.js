@@ -19,10 +19,15 @@ class App extends Component {
       }).then(data => {
           this.setState({modes: data});
       });
+      fetch("/activeMode").then(response => {
+        return response.json();
+      }).then(data => {
+        this.setState({activeMode: data.mode})
+      })
   }
 
   setLightMode(mode) {
-      fetch("/setMode/" + mode).then(response => {
+      fetch("/activeMode/" + mode).then(response => {
           return response.json();
       }).then(data => {
           if (data.status === "OK") {
