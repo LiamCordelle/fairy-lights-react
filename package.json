@@ -11,7 +11,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
-  "proxy": "http://192.168.1.13:8080/"
+  "proxy": "http://192.168.1.13:8080/",
+  "devDependencies": {
+    "gh-pages": "^1.2.0"
+  },
+  "homepage": "https://liamcordelle.github.io/fairy-lights"
 }
