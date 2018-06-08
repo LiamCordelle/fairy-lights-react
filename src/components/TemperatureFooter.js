@@ -9,10 +9,16 @@ class TemperatureFooter extends Component {
 
   getLatestTemperature() {
     fetch('/getTemperature').then(response => {
+      console.log(response);
       return response.json();
     }).then(data => {
-      this.setState({temperature: data});
+      console.log(data);
+      this.setState({temperature: data.temperature});
     })
+  }
+
+  componentWillMount() {
+    this.setState({temperature: this.getLatestTemperature()})
   }
 
   componentDidMount() {
@@ -27,6 +33,7 @@ class TemperatureFooter extends Component {
   }
 
   render() {
+
     return (
       <div className="TemperatureFooter">
         <div className="centering-table">

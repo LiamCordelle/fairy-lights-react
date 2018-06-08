@@ -22,13 +22,10 @@ class App extends Component {
   }
 
   setLightMode(mode) {
-      console.log("Setting mode: " + mode);
       fetch("/setMode/" + mode).then(response => {
-          console.log(response);
           return response.json();
       }).then(data => {
-          console.log(data);
-          if (data === "OK") {
+          if (data.status === "OK") {
               this.setState({activeMode: mode})
           }
       })
