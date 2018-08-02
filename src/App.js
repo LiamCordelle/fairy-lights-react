@@ -14,12 +14,12 @@ class App extends Component {
   }
 
   componentWillMount() {
-      fetch("http://192.168.1.13:8081/getModes").then(response => {
+      fetch("https://192.168.1.13:8081/getModes").then(response => {
           return response.json();
       }).then(data => {
           this.setState({modes: data});
       });
-      fetch("/activeMode").then(response => {
+      fetch("https://192.168.1.13:8081/activeMode").then(response => {
         return response.json();
       }).then(data => {
         this.setState({activeMode: data.mode})
@@ -27,7 +27,7 @@ class App extends Component {
   }
 
   setLightMode(mode) {
-      fetch("http://192.168.1.13:8081/activeMode/" + mode).then(response => {
+      fetch("https://192.168.1.13:8081/activeMode/" + mode).then(response => {
           return response.json();
       }).then(data => {
           if (data.status === "OK") {
