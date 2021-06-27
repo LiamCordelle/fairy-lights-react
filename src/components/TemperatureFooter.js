@@ -24,7 +24,7 @@ class TemperatureFooter extends Component {
   componentDidMount() {
     this.temperatureRefresher = setInterval(
       () => this.getLatestTemperature(),
-      5000
+      30000
     );
   }
 
