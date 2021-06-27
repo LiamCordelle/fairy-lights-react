@@ -89,8 +89,8 @@ class App extends Component {
       buttons.push(<ControlButton mode={key} onClick={() => this.setLightMode(key)} displayName={this.state.modes[key]} active={(key === this.state.activeMode)} />)
     })
 
-    buttons.push(<ControlButton mode="scheduleOn" onClick={() => this.setState({ showTimerModal: true, isOnTimerModal: true })} displayName="Schedule On" active={this.onTimer} />)
-    buttons.push(<ControlButton mode="scheduleOff" onClick={() => this.setState({ showTimerModal: true, isOnTimerModal: false })} displayName="Schedule Off" active={this.offTimer} />)
+    buttons.push(<ControlButton mode="scheduleOn" onClick={() => this.setState({ showTimerModal: true, isOnTimerModal: true })} displayName="Schedule On" active={this.state.onTimer} />)
+    buttons.push(<ControlButton mode="scheduleOff" onClick={() => this.setState({ showTimerModal: true, isOnTimerModal: false })} displayName="Schedule Off" active={this.state.offTimer} />)
     return buttons;
   }
 
