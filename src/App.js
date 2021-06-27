@@ -26,17 +26,32 @@ class App extends Component {
     this.setTimer = this.setTimer.bind(this);
   }
 
+  updateActiveModes() {
+    fetch("http://192.168.1.207:8080/activeMode").then(response => {
+      return response.json();
+    }).then(data => {
+      this.setState({ activeMode: data.mode, onTimer: data.onTimer, offTimer: data.offTimer })
+    })
+  }
+
   UNSAFE_componentWillMount() {
     fetch("http://192.168.1.207:8080/getModes").then(response => {
       return response.json();
     }).then(data => {
       this.setState({ modes: data });
     });
-    fetch("http://192.168.1.207:8080/activeMode").then(response => {
-      return response.json();
-    }).then(data => {
-      this.setState({ activeMode: data.mode, onTimer: data.onTimer, offTimer: data.offTimer })
-    })
+    this.updateActiveModes();
+  }
+
+  componentDidMount() {
+    this.modeRefresher = setInterval(
+      () => this.updateActiveModes(),
+      5000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.modeRefresher);
   }
 
   setLightMode(mode) {
@@ -108,8 +123,8 @@ class App extends Component {
           confirmLoading={this.state.timerCallLoading}
         >
           Time: <TimePicker value={this.state.timerEndTime} onChange={(time) => this.setState({ timerEndTime: time })} format="h:mm a" />
-          <br/>
-          <br/>
+          <br />
+          <br />
           Fade period (minutes): <InputNumber min={0} max={30} defaultValue={0} onChange={(fadeMins) => this.setState({ fadeTime: fadeMins })} />
         </Modal>
 
