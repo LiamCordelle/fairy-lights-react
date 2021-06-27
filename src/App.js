@@ -58,10 +58,10 @@ class App extends Component {
       endTimeMoment.add(1, 'days');
     }
 
-    let minutesUntilEnd = (endTimeMoment.unix() - moment().unix()) * 60;
+    let minutesUntilEnd = (endTimeMoment.unix() - moment().unix()) / 60;
 
 
-    fetch("http://192.168.1.207:8080/timer/" + (this.state.isOnTimerModal ? "on" : "off") + "/" + minutesUntilEnd + "/" + this.state.fadeTime).then(response => {
+    fetch("http://192.168.1.207:8080/timer/" + (this.state.isOnTimerModal ? "on" : "off") + "/" + Math.round(minutesUntilEnd) + "/" + this.state.fadeTime).then(response => {
       return response.json();
     }).then(data => {
       if (this.state.isOnTimerModal) {
