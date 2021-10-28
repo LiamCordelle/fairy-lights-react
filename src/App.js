@@ -34,16 +34,14 @@ class App extends Component {
     })
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     fetch("http://192.168.1.207:8080/getModes").then(response => {
       return response.json();
     }).then(data => {
       this.setState({ modes: data });
     });
     this.updateActiveModes();
-  }
 
-  componentDidMount() {
     this.modeRefresher = setInterval(
       () => this.updateActiveModes(),
       5000
@@ -67,14 +65,14 @@ class App extends Component {
   setTimer() {
     this.setState({ timerCallLoading: true });
 
-    let endTimeMoment = this.state.timerEndTime;
+    const endTimeMoment = this.state.timerEndTime;
+    const currentTime = moment().subtract(1, 'minutes');
 
-    if (endTimeMoment.isBefore(moment())) {
+    if (endTimeMoment.isBefore(currentTime, 'minute')) {
       endTimeMoment.add(1, 'days');
     }
 
-    let minutesUntilEnd = (endTimeMoment.unix() - moment().unix()) / 60;
-
+    let minutesUntilEnd = Math.max((endTimeMoment.unix() - currentTime.unix()) / 60, 0);
 
     fetch("http://192.168.1.207:8080/timer/" + (this.state.isOnTimerModal ? "on" : "off") + "/" + Math.round(minutesUntilEnd) + "/" + this.state.fadeTime).then(response => {
       return response.json();
