@@ -3,8 +3,8 @@ import './ComponentCss/TemperatureFooter.css';
 
 class TemperatureFooter extends Component {
   constructor(props) {
-        super(props);
-        this.state = {temperature: this.getLatestTemperature()};
+    super(props);
+    this.state = { temperature: '...' };
   }
 
   getLatestTemperature() {
@@ -13,15 +13,13 @@ class TemperatureFooter extends Component {
       return response.json();
     }).then(data => {
       console.log(data);
-      this.setState({temperature: data.temperature});
+      this.setState({ temperature: data.temperature });
     })
   }
 
-  componentWillMount() {
-    this.setState({temperature: this.getLatestTemperature()})
-  }
-
   componentDidMount() {
+    this.getLatestTemperature();
+
     this.temperatureRefresher = setInterval(
       () => this.getLatestTemperature(),
       30000
@@ -29,11 +27,10 @@ class TemperatureFooter extends Component {
   }
 
   componentWillUnmount() {
-      clearInterval(this.temperatureRefresher);
+    clearInterval(this.temperatureRefresher);
   }
 
   render() {
-
     return (
       <div className="TemperatureFooter">
         <div className="centering-table">
