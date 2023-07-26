@@ -27,7 +27,7 @@ class App extends Component {
   }
 
   updateActiveModes() {
-    fetch("http://192.168.1.207:8080/activeMode").then(response => {
+    fetch("http://192.168.0.69:8080/activeMode").then(response => {
       return response.json();
     }).then(data => {
       this.setState({ activeMode: data.mode, onTimer: data.onTimer, offTimer: data.offTimer })
@@ -35,7 +35,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch("http://192.168.1.207:8080/getModes").then(response => {
+    fetch("http://192.168.0.69:8080/getModes").then(response => {
       return response.json();
     }).then(data => {
       this.setState({ modes: data });
@@ -53,7 +53,7 @@ class App extends Component {
   }
 
   setLightMode(mode) {
-    fetch("http://192.168.1.207:8080/activeMode/" + mode).then(response => {
+    fetch("http://192.168.0.69:8080/activeMode/" + mode).then(response => {
       return response.json();
     }).then(data => {
       if (data.status === "OK") {
@@ -74,7 +74,7 @@ class App extends Component {
 
     let minutesUntilEnd = Math.max((endTimeMoment.unix() - currentTime.unix()) / 60, 0);
 
-    fetch("http://192.168.1.207:8080/timer/" + (this.state.isOnTimerModal ? "on" : "off") + "/" + Math.round(minutesUntilEnd) + "/" + this.state.fadeTime).then(response => {
+    fetch("http://192.168.0.69:8080/timer/" + (this.state.isOnTimerModal ? "on" : "off") + "/" + Math.round(minutesUntilEnd) + "/" + this.state.fadeTime).then(response => {
       return response.json();
     }).then(data => {
       if (this.state.isOnTimerModal) {

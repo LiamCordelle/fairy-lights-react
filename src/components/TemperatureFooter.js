@@ -8,7 +8,7 @@ class TemperatureFooter extends Component {
   }
 
   getLatestTemperature() {
-    fetch('http://192.168.1.207:8080/getTemperature').then(response => {
+    fetch('http://192.168.0.69:8080/getTemperature').then(response => {
       console.log(response);
       return response.json();
     }).then(data => {
