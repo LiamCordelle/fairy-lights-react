@@ -1,70 +1,135 @@
-# Getting Started with Create React App
+# Fairy Lights Controller
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React application for controlling fairy lights, modernized with Vite and PWA capabilities.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Modern Stack**: Built with React 18 and Vite.
+- **PWA Ready**: Installable on Android/iOS as a standalone app.
+- **Responsive**: Mobile-friendly UI with Ant Design.
+- **Efficient**: Fast build times and optimized assets.
 
-### `yarn start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Prerequisites
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Node.js (v24+ recommended)
+- npm
 
-### `yarn test`
+> **Tip:** If you use `nvm`, you can run `nvm use` to automatically switch to the correct Node version.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `yarn build`
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Development
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Runs the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm start
+```
 
-### `yarn eject`
+### Build
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Builds the app for production to the `build` folder.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm run build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Deployment
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Apache on Raspberry Pi
 
-## Learn More
+To host this application on a Raspberry Pi running Apache:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1.  **Build the project**:
+    ```bash
+    npm run build
+    ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2.  **Copy to Web Server**:
+    Transfer the contents of the `build` directory to your Apache web root (usually `/var/www/html`).
 
-### Code Splitting
+    ```bash
+    # Example copy command (adjust paths as needed)
+    sudo cp -r build/* /var/www/html/
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3.  **Permissions**:
+    Ensure the files are readable by the web server user (`www-data`).
+    ```bash
+    sudo chown -R www-data:www-data /var/www/html
+    ```
 
-### Analyzing the Bundle Size
+4.  **PWA Requirements (HTTPS)**:
+    For the "Add to Home Screen" PWA feature to work, the site **must be served over HTTPS** (or `localhost`).
+    - If accessing via IP (e.g., `http://192.168.1.x`), PWA features might be disabled by the browser security policy.
+    - You can use **Let's Encrypt** (if proper domain) or generate a **Self-Signed Certificate** for local use to enable HTTPS on Apache.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Generating a Self-Signed Certificate
 
-### Making a Progressive Web App
+To enable HTTPS on your Raspberry Pi (required for PWA):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1.  **Generate the Certificate**:
+    Run this command on your Pi (replace `192.168.1.XX` with your Pi's actual IP address):
+    ```bash
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+      -keyout /etc/ssl/private/apache-selfsigned.key \
+      -out /etc/ssl/certs/apache-selfsigned.crt \
+      -subj "/C=GB/ST=London/L=London/O=Liam Cordelle's Raspberry Pi/CN=192.168.1.XX" \
+      -addext "subjectAltName=IP:192.168.1.XX"
+    ```
+    *Note: The `subjectAltName` (SAN) is critical for Chrome on Android to accept the IP address.*
 
-### Advanced Configuration
+2.  **Configure Apache**:
+    Edit the default SSL configuration:
+    ```bash
+    sudo nano /etc/apache2/sites-available/default-ssl.conf
+    ```
+    Update the `SSLCertificateFile` and `SSLCertificateKeyFile` lines:
+    ```apache
+    SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
+    SSLCertificateKeyFile   /etc/ssl/private/apache-selfsigned.key
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+3.  **Enable SSL and Restart**:
+    ```bash
+    sudo a2enmod ssl
+    sudo a2ensite default-ssl
+    sudo systemctl restart apache2
+    ```
 
-### Deployment
+4.  **Trust on Device**:
+    When you visit `https://<YOUR-PI-IP>` on your phone, you will see a "Not Secure" warning. Click "Advanced" -> "Proceed" to accept the certificate. The "Add to Home Screen" option should now appear.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Testing with ngrok (Alternative)
 
-### `yarn build` fails to minify
+If you have trouble with self-signed certificates, you can use **ngrok** to get a public, secure HTTPS URL for your Pi.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1.  **Install ngrok**:
+    ```bash
+    curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
+    ```
+    *(Note: You'll need to sign up for a free account at ngrok.com to get an authtoken)*
+
+2.  **Start Tunnel**:
+    ```bash
+    ngrok http 80
+    ```
+3.  **Use URL**: Use the provided `https://....ngrok-free.app` URL on your phone. It has valid SSL, so PWA installation will work immediately.
+
+### `.htaccess` (Optional)
+
+If you use client-side routing (e.g., React Router) in the future, you will need to enable `mod_rewrite` and add an `.htaccess` file to redirect all requests to `index.html`. For this current single-page version without routing, it is not strictly necessary but good practice.
+
+Create `/var/www/html/.htaccess`:
+```apache
+Options -MultiViews
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.html [QSA,L]
+```
