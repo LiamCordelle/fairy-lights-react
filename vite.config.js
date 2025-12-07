@@ -7,7 +7,7 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
+            includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png', 'apple-touch-icon.png'],
             manifest: {
                 short_name: "Fairy Lights",
                 name: "Local Fairy Lights Controller",
