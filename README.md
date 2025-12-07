@@ -122,6 +122,14 @@ If you have trouble with self-signed certificates, you can use **ngrok** to get 
     ```
 3.  **Use URL**: Use the provided `https://....ngrok-free.app` URL on your phone. It has valid SSL, so PWA installation will work immediately.
 
+### iOS Support
+
+Project supports "Add to Home Screen" on iOS (iPhone/iPad) as well.
+1.  Open the site in **Safari**.
+2.  Tap the **Share** button (box with an arrow pointing up).
+3.  Scroll down and tap **"Add to Home Screen"**.
+4.  Confirm the name and tap "Add".
+
 ### `.htaccess` (Optional)
 
 If you use client-side routing (e.g., React Router) in the future, you will need to enable `mod_rewrite` and add an `.htaccess` file to redirect all requests to `index.html`. For this current single-page version without routing, it is not strictly necessary but good practice.
