@@ -1,24 +1,20 @@
 import React from 'react';
 import './ComponentCss/ControlButton.css';
 
-const ControlButton = ({ active, onClick, mode, displayName }) => {
-  let outerBoxClassName = "SquareBox";
 
-  if (active) {
-    outerBoxClassName += " Active";
-  }
-
-  return (
-    <div className={outerBoxClassName}>
-      <div className='ControlButtonContainer'>
-        <div className='centering-table'>
-          <a className="centering-table-cell control_button" onClick={onClick} href={"#" + mode}>
-            <div className="control_button_content">{displayName}</div>
-          </a>
-        </div>
-      </div>
-    </div>
-  )
-}
+const ControlButton = ({ active, disabled, onClick, mode, displayName }) => (
+  <div className={`SquareBox${active ? ' Active' : ''}`}>
+    <button
+      type="button"
+      className="ControlButtonContainer control_button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-pressed={active}
+      data-mode={mode}
+    >
+      <span className="control_button_content">{displayName}</span>
+    </button>
+  </div>
+);
 
 export default ControlButton;

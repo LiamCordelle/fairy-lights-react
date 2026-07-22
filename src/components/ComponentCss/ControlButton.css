@@ -1,27 +1,41 @@
-.ControlButtonContainer {
-	position: absolute;
-	height: 100%;
-	width: 100%;
+.SquareBox {
+  width: 45%;
+  background-color: steelblue;
+  float: left;
+  margin: 2.5%;
+  padding-bottom: 45%;
+  position: relative;
+  border-radius: 0.25rem;
+  overflow: hidden;
 }
 
-.SquareBox {
-	width: 45%;
-	background-color: steelblue;
-	float: left;
-	margin: 2.5%;
-	padding-bottom: 45%;
-	position: relative;
+.ControlButtonContainer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .control_button {
-	color: white;
-	font-size: 32px;
-	text-decoration: none;
+  border: 0;
+  background: transparent;
+  color: white;
+  font: inherit;
+  font-size: clamp(1.25rem, 5vw, 2rem);
+  cursor: pointer;
 }
 
-.control_button:hover {
-	color: white;
-	text-decoration: none;
+.control_button:focus-visible {
+  outline: 4px solid #1f2937;
+  outline-offset: -4px;
+}
+
+.control_button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .control_button_content {
@@ -29,5 +43,5 @@
 }
 
 .Active {
-    background-color: #699bc4 !important;
+  background-color: #699bc4;
 }

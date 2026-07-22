@@ -1,18 +1,75 @@
 #wrapper {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 5rem;
+  box-sizing: border-box;
 }
 
-.centering-table {
-	display: table;
-	height: 100%;
-	width: 100%;
+.connection-status {
+  padding: 0.65rem 1rem;
+  text-align: center;
+  color: white;
 }
 
-.centering-table-cell {
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-	height: 100%;
-	width: 100%;
+.connection-status.connected {
+  background-color: #327a46;
+}
+
+.connection-status.disconnected {
+  background-color: #9b2c2c;
+}
+
+.connection-status.warning {
+  background-color: #9a6700;
+}
+
+.controls::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.timer-summary {
+  clear: both;
+  margin: 1rem 2.5%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #699bc4;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.timer-summary button {
+  border: 0;
+  border-radius: 0.25rem;
+  padding: 0.55rem 0.8rem;
+  background-color: #9b2c2c;
+  color: white;
+  cursor: pointer;
+}
+
+.timer-summary button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.timer-field {
+  margin: 1rem 0;
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) minmax(10rem, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-error {
+  color: #9b2c2c;
+}
+
+@media (max-width: 480px) {
+  .timer-field {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
 }

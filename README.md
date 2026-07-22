@@ -32,6 +32,25 @@ Runs the app in development mode. Open [http://localhost:3000](http://localhost:
 npm start
 ```
 
+The API defaults to `http://192.168.1.69:8080`. Override it when using the
+stateful backend simulator:
+
+```bash
+VITE_API_BASE_URL=http://localhost:8081 npm start
+```
+
+The client bounds each request to four seconds, avoids overlapping status polls,
+and shows connection or command failures in the page instead of silently keeping
+stale state.
+
+### Tests
+
+Run the timer, API-client, and component tests with:
+
+```bash
+npm test
+```
+
 ### Build
 
 Builds the app for production to the `build` folder.
@@ -39,6 +58,10 @@ Builds the app for production to the `build` folder.
 ```bash
 npm run build
 ```
+
+The client uses the coordinated Python 3 API contract: mode changes and timer
+creation use `POST`, timer cancellation uses `DELETE`, and status responses
+include the pending timer's target and due time.
 
 ## Deployment
 
