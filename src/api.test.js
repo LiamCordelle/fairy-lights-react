@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ApiError, requestJson, setMode, setTimer } from './api';
+import { API_BASE_URL, ApiError, requestJson, setMode, setTimer } from './api';
 
 
 afterEach(() => {
@@ -9,6 +9,10 @@ afterEach(() => {
 });
 
 describe('API client', () => {
+  it('uses the same-origin API path by default', () => {
+    expect(API_BASE_URL).toBe('/api');
+  });
+
   it('uses POST for mode changes', async () => {
     const fetchMock = vi.spyOn(global, 'fetch').mockResolvedValue({
       ok: true,

@@ -32,12 +32,17 @@ Runs the app in development mode. Open [http://localhost:3000](http://localhost:
 npm start
 ```
 
-The API defaults to `http://192.168.1.69:8080`. Override it when using the
-stateful backend simulator:
+The app uses the same-origin `/api` path. During development, Vite proxies that
+path to the stateful backend simulator at `http://127.0.0.1:8081`, so start the
+simulator and then run:
 
 ```bash
-VITE_API_BASE_URL=http://localhost:8081 npm start
+npm start
 ```
+
+Set `VITE_API_BASE_URL` only when deliberately targeting a different API origin.
+Production deployment requires Apache to proxy `/api/` to
+`http://127.0.0.1:8080/`; deploy this build together with that Apache change.
 
 The client bounds each request to four seconds, avoids overlapping status polls,
 and shows connection or command failures in the page instead of silently keeping

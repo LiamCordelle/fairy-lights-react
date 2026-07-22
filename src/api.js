@@ -1,7 +1,7 @@
 const configuredApiBaseUrl = import.meta.env?.VITE_API_BASE_URL;
 
 export const API_BASE_URL = (
-  configuredApiBaseUrl || 'http://192.168.1.69:8080'
+  configuredApiBaseUrl || '/api'
 ).replace(/\/$/, '');
 
 export class ApiError extends Error {
