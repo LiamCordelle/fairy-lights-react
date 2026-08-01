@@ -26,23 +26,22 @@ npm install
 
 ### Development
 
-Runs the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-```bash
-npm start
-```
-
 The app uses the same-origin `/api` path. During development, Vite proxies that
 path to the stateful backend simulator at `http://127.0.0.1:8081`. Start
-`react_api_simulator.py` from the sibling backend repository before running:
+`react_api_simulator.py` from the sibling backend repository, then start Vite
+and open [http://localhost:3000](http://localhost:3000):
 
 ```bash
+cd ../RPIFairyLights
+.venv/bin/python react_api_simulator.py
+
+cd ../fairy-lights-react
 npm start
 ```
 
 Set `VITE_API_BASE_URL` only when deliberately targeting a different API origin.
-Production deployment requires Apache to proxy `/api/` to
-`http://127.0.0.1:8080/`; deploy this build together with that Apache change.
+Production Apache is already configured to proxy `/api/` to
+`http://127.0.0.1:8080/`; the coordinated deploy keeps that contract intact.
 
 The client bounds each request to four seconds, avoids overlapping status polls,
 and shows connection or command failures in the page instead of silently keeping
