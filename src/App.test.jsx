@@ -50,6 +50,16 @@ beforeEach(() => {
 });
 
 describe('App', () => {
+  it('requests the numeric keypad for the fade period', async () => {
+    render(<App />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Schedule On' }));
+
+    expect(
+      screen.getByLabelText('Fade period (minutes)').getAttribute('inputmode'),
+    ).toBe('numeric');
+  });
+
   it('confirms a mode change with server status before marking it active', async () => {
     getActiveStatus.mockResolvedValueOnce(offStatus).mockResolvedValue(onStatus);
     render(<App />);

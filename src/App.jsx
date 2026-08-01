@@ -267,6 +267,7 @@ const App = () => {
             <label htmlFor="fade-time">Fade period (minutes)</label>
             <InputNumber
               id="fade-time"
+              inputMode="numeric"
               min={0}
               max={30}
               value={fadeTime}
