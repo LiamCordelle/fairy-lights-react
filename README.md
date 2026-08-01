@@ -13,7 +13,7 @@ A React application for controlling fairy lights, modernized with Vite and PWA c
 
 ### Prerequisites
 
-- Node.js (v24+ recommended)
+- Node.js 24 (required by `.nvmrc` and `package.json`)
 - npm
 
 > **Tip:** If you use `nvm`, you can run `nvm use` to automatically switch to the correct Node version.
@@ -33,8 +33,8 @@ npm start
 ```
 
 The app uses the same-origin `/api` path. During development, Vite proxies that
-path to the stateful backend simulator at `http://127.0.0.1:8081`, so start the
-simulator and then run:
+path to the stateful backend simulator at `http://127.0.0.1:8081`. Start
+`react_api_simulator.py` from the sibling backend repository before running:
 
 ```bash
 npm start
@@ -64,91 +64,36 @@ Builds the app for production to the `build` folder.
 npm run build
 ```
 
-The client uses the coordinated Python 3 API contract: mode changes and timer
-creation use `POST`, timer cancellation uses `DELETE`, and status responses
-include the pending timer's target and due time.
+The client uses the coordinated API contract implemented by the production
+Python 2-compatible backend: mode changes and timer creation use `POST`, timer
+cancellation uses `DELETE`, and status responses include the pending timer's
+target and due time.
 
 ## Deployment
 
-### Apache on Raspberry Pi
+Do not copy `build/` into `/var/www/html` manually. Production releases pair
+the frontend and backend commit hashes, switch versioned symlinks atomically,
+run health checks, and retain a paired rollback target.
 
-To host this application on a Raspberry Pi running Apache:
+From the sibling `RPIFairyLights` repository, run:
 
-1.  **Build the project**:
-    ```bash
-    npm run build
-    ```
+```bash
+nvm use
+./deployment/deploy.sh
+```
 
-2.  **Copy to Web Server**:
-    Transfer the contents of the `build` directory to your Apache web root (usually `/var/www/html`).
+The script builds this project locally with Node 24 and deploys both projects.
+See `RPIFairyLights/deployment/README.md` for release paths, verification, and
+rollback instructions.
 
-    ```bash
-    # Example copy command (adjust paths as needed)
-    sudo cp -r build/* /var/www/html/
-    ```
+Production is intentionally LAN-only. Apache serves the UI over HTTP and HTTPS
+and proxies `/api/` to the loopback-only backend. Do not expose it through
+ngrok, another public tunnel, or a router port-forward: the controller has no
+authentication and changes physical hardware state.
 
-3.  **Permissions**:
-    Ensure the files are readable by the web server user (`www-data`).
-    ```bash
-    sudo chown -R www-data:www-data /var/www/html
-    ```
-
-4.  **PWA Requirements (HTTPS)**:
-    For the "Add to Home Screen" PWA feature to work, the site **must be served over HTTPS** (or `localhost`).
-    - If accessing via IP (e.g., `http://192.168.1.x`), PWA features might be disabled by the browser security policy.
-    - You can use **Let's Encrypt** (if proper domain) or generate a **Self-Signed Certificate** for local use to enable HTTPS on Apache.
-
-### Generating a Self-Signed Certificate
-
-To enable HTTPS on your Raspberry Pi (required for PWA):
-
-1.  **Generate the Certificate**:
-    Run this command on your Pi (replace `192.168.1.XX` with your Pi's actual IP address):
-    ```bash
-    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-      -keyout /etc/ssl/private/apache-selfsigned.key \
-      -out /etc/ssl/certs/apache-selfsigned.crt \
-      -subj "/C=GB/ST=London/L=London/O=Liam Cordelle's Raspberry Pi/CN=192.168.1.XX" \
-      -addext "subjectAltName=IP:192.168.1.XX"
-    ```
-    *Note: The `subjectAltName` (SAN) is critical for Chrome on Android to accept the IP address.*
-
-2.  **Configure Apache**:
-    Edit the default SSL configuration:
-    ```bash
-    sudo nano /etc/apache2/sites-available/default-ssl.conf
-    ```
-    Update the `SSLCertificateFile` and `SSLCertificateKeyFile` lines:
-    ```apache
-    SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
-    SSLCertificateKeyFile   /etc/ssl/private/apache-selfsigned.key
-    ```
-
-3.  **Enable SSL and Restart**:
-    ```bash
-    sudo a2enmod ssl
-    sudo a2ensite default-ssl
-    sudo systemctl restart apache2
-    ```
-
-4.  **Trust on Device**:
-    When you visit `https://<YOUR-PI-IP>` on your phone, you will see a "Not Secure" warning. Click "Advanced" -> "Proceed" to accept the certificate. The "Add to Home Screen" option should now appear.
-
-### Testing with ngrok (Alternative)
-
-If you have trouble with self-signed certificates, you can use **ngrok** to get a public, secure HTTPS URL for your Pi.
-
-1.  **Install ngrok**:
-    ```bash
-    curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
-    ```
-    *(Note: You'll need to sign up for a free account at ngrok.com to get an authtoken)*
-
-2.  **Start Tunnel**:
-    ```bash
-    ngrok http 80
-    ```
-3.  **Use URL**: Use the provided `https://....ngrok-free.app` URL on your phone. It has valid SSL, so PWA installation will work immediately.
+The Pi already has Apache HTTPS configured with a self-signed certificate.
+Regenerating or replacing that certificate is a separate administrative task,
+not part of an ordinary application deployment.
 
 ### iOS Support
 
@@ -158,14 +103,6 @@ Project supports "Add to Home Screen" on iOS (iPhone/iPad) as well.
 3.  Scroll down and tap **"Add to Home Screen"**.
 4.  Confirm the name and tap "Add".
 
-### `.htaccess` (Optional)
-
-If you use client-side routing (e.g., React Router) in the future, you will need to enable `mod_rewrite` and add an `.htaccess` file to redirect all requests to `index.html`. For this current single-page version without routing, it is not strictly necessary but good practice.
-
-Create `/var/www/html/.htaccess`:
-```apache
-Options -MultiViews
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.html [QSA,L]
-```
+PWA installation requires a trusted HTTPS context. Because the Pi uses a
+self-signed certificate, the device may need to trust or explicitly accept it
+before installation is offered.
